@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — WSM Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--gold-dim:#8A6E2F;--black:#050507;--dark:#0D0D12;--card:#13131A;--border:rgba(201,168,76,0.16);--text:#E8E8F0;--muted:#7A7A96;--white:#FFF;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--text);font-family:'Inter',sans-serif;line-height:1.7;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 60px;background:rgba(5,5,7,.75);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.nav-logo-badge{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--black);}
+.nav-logo-name{font-size:14px;font-weight:700;color:var(--white);}
+.back-link{color:var(--gold);text-decoration:none;font-size:13px;font-weight:600;letter-spacing:.05em;}
+.wrap{max-width:760px;margin:0 auto;padding:150px 24px 100px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(42px,6vw,64px);color:var(--white);line-height:1;margin-bottom:8px;}
+.updated{color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:48px;}
+h2{font-family:'Space Grotesk',sans-serif;font-size:22px;color:var(--white);margin:40px 0 14px;padding-top:32px;border-top:1px solid var(--border);}
+h2:first-of-type{border-top:none;padding-top:0;}
+p{color:var(--muted);font-size:15px;margin-bottom:14px;}
+ul{color:var(--muted);font-size:15px;margin:14px 0 14px 20px;}
+li{margin-bottom:8px;}
+strong{color:var(--text);}
+a.inline{color:var(--gold);}
+table{width:100%;border-collapse:collapse;margin:16px 0;}
+th,td{text-align:left;padding:12px;border-bottom:1px solid var(--border);font-size:14px;color:var(--muted);}
+th{color:var(--gold);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;}
+td strong{color:var(--text);}
+.contact-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;margin-top:48px;}
+.contact-box p{margin-bottom:6px;}
+footer{border-top:1px solid var(--border);padding:36px 60px;text-align:center;color:var(--muted);font-size:12px;}
+@media(max-width:700px){nav{padding:14px 20px;}.wrap{padding:130px 20px 80px;}table,tbody,tr{display:block;}th{display:none;}td{padding:6px 0;border:none;}tr{padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:16px;display:block;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-badge">WSM</div>
+    <div class="nav-logo-name">WSM Academy</div>
+  </a>
+  <a class="back-link" href="index.html">← Back to Academy</a>
+</nav>
+
+<div class="wrap">
+  <h1>Privacy Policy</h1>
+  <div class="updated">Last Updated · July 2026</div>
+
+  <p>WSM Academy, operated by WSM Investments Holdings (Pty) Ltd, respects your privacy. This policy explains what personal information we collect, why we collect it, and how it's protected when you use our platform.</p>
+
+  <h2>1. Information We Collect</h2>
+  <table>
+    <tr><th>What</th><th>Why</th></tr>
+    <tr><td><strong>Name, email, phone number</strong></td><td>To process your enrollment application and contact you about it</td></tr>
+    <tr><td><strong>Skill track & plan selection</strong></td><td>To determine which AI tutor and content tier to unlock for you</td></tr>
+    <tr><td><strong>Payment information</strong></td><td>Processed directly by Paystack — WSM Academy never sees or stores your card details</td></tr>
+    <tr><td><strong>AI tutor conversation content</strong></td><td>To provide tutoring responses via Anthropic's Claude AI during your session</td></tr>
+    <tr><td><strong>Subscription status</strong></td><td>To determine which tier of content and AI tutor access you're entitled to</td></tr>
+  </table>
+
+  <h2>2. How We Use Your Information</h2>
+  <ul>
+    <li>To create and manage your subscription and unlock the correct AI tutor tier</li>
+    <li>To send enrollment confirmation and instructional emails</li>
+    <li>To respond to support requests, refund requests, or general enquiries</li>
+    <li>To improve our course content and platform based on usage patterns</li>
+  </ul>
+  <p>We do not sell, rent, or trade your personal information to third parties for marketing purposes.</p>
+
+  <h2>3. Third-Party Services We Use</h2>
+  <p>To operate WSM Academy, we rely on the following trusted third-party services, each of which processes a limited part of your data on our behalf:</p>
+  <ul>
+    <li><strong>Paystack</strong> — processes your subscription payments securely. We never see or store your card details.</li>
+    <li><strong>Supabase</strong> — securely stores your subscription status (email, tier, active/inactive) so the AI tutor knows what you've paid for.</li>
+    <li><strong>Resend</strong> — sends enrollment and instructional emails on our behalf.</li>
+    <li><strong>Anthropic (Claude AI)</strong> — powers the AI tutor conversations. Your messages to the tutor are sent to Anthropic's API to generate responses.</li>
+    <li><strong>Vercel</strong> — hosts our website.</li>
+  </ul>
+  <p>Each of these providers has its own privacy and security practices governing how they handle data passed to them.</p>
+
+  <h2>4. Data Security</h2>
+  <p>Your subscription data is protected using database-level access rules that prevent anyone — including our own website's public code — from reading or editing subscriber records directly. Only a narrow, purpose-built check ("does this email have an active subscription at this tier?") is exposed to the website itself.</p>
+
+  <h2>5. Data Retention</h2>
+  <p>We retain your account and subscription information for as long as your account remains active, and for a reasonable period afterward for record-keeping, tax, and legal compliance purposes. You may request deletion of your personal data at any time, subject to legal retention requirements (e.g., financial transaction records).</p>
+
+  <h2>6. Your Rights</h2>
+  <p>Under South Africa's Protection of Personal Information Act (POPIA), you have the right to:</p>
+  <ul>
+    <li>Request a copy of the personal information we hold about you</li>
+    <li>Request correction of inaccurate information</li>
+    <li>Request deletion of your personal information, subject to legal retention obligations</li>
+    <li>Withdraw consent to marketing communications at any time</li>
+  </ul>
+  <p>To exercise any of these rights, contact us using the details below.</p>
+
+  <h2>7. Cookies & Local Storage</h2>
+  <p>Our website uses your browser's local storage to remember your login email between visits, so you don't need to re-enter it every time you return to your AI tutor. This is stored on your device only, not shared with third parties.</p>
+
+  <h2>8. Children's Privacy</h2>
+  <p>WSM Academy is intended for users aged 18 and older, or minors with parental/guardian consent. We do not knowingly collect personal information from children without such consent.</p>
+
+  <h2>9. Changes to This Policy</h2>
+  <p>We may update this Privacy Policy periodically. Changes will be posted on this page with an updated "Last Updated" date.</p>
+
+  <div class="contact-box">
+    <p><strong>Privacy questions or data requests?</strong></p>
+    <p>WSM Investments Holdings (Pty) Ltd</p>
+    <p>Northwold, Randburg, Gauteng, South Africa</p>
+    <p>Email: wsminvestmentsholdings@gmail.com</p>
+    <p>Phone / WhatsApp: 072 335 5470</p>
+  </div>
+</div>
+
+<footer>© 2026 WSM Investments Holdings (Pty) Ltd. All rights reserved.</footer>
+</body>
+</html>
