@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WSM Academy — Skills That Connect</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --charcoal:#1A1815; --charcoal-deep:#121110; --paper:#EDE8DF; --paper-warm:#E4DCCC;
+  --copper:#C4622D; --copper-bright:#DD7940; --slate:#4A6670; --slate-light:#6B8891;
+  --ink:#2A2620; --ink-soft:#5C5548; --line:rgba(196,98,45,0.22); --line-dark:rgba(237,232,223,0.12);
+  --cream-text:#EDE8DF; --muted-on-dark:#A39B8B;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--charcoal);color:var(--cream-text);font-family:'Manrope',sans-serif;overflow-x:hidden;}
+::selection{background:var(--copper);color:var(--charcoal);}
+
+h1,h2,h3,.display{font-family:'Fraunces',serif;}
+.mono{font-family:'JetBrains Mono',monospace;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:22px 56px;background:rgba(26,24,21,.82);backdrop-filter:blur(16px);border-bottom:1px solid var(--line-dark);}
+.nav-mark{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.nav-mark svg{width:34px;height:34px;flex-shrink:0;}
+.nav-name{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--cream-text);letter-spacing:.01em;}
+.nav-sub{font-size:10px;color:var(--muted-on-dark);letter-spacing:.14em;text-transform:uppercase;display:block;margin-top:-2px;}
+nav ul{list-style:none;display:flex;gap:38px;}
+nav ul a{color:var(--muted-on-dark);text-decoration:none;font-size:13px;font-weight:500;letter-spacing:.02em;transition:color .3s;}
+nav ul a:hover{color:var(--copper-bright);}
+.nav-cta{background:var(--copper);color:var(--charcoal-deep);padding:11px 24px;border-radius:3px;font-size:13px;font-weight:700;text-decoration:none;letter-spacing:.02em;transition:background .25s;}
+.nav-cta:hover{background:var(--copper-bright);}
+
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:160px 56px 80px;}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center;width:100%;max-width:1360px;margin:0 auto;}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+.hero-eyebrow .rule{width:32px;height:1px;background:var(--copper);}
+.hero-eyebrow span{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-bright);}
+.hero h1{font-size:clamp(48px,5.4vw,80px);font-weight:600;line-height:1.02;color:var(--cream-text);letter-spacing:-.01em;}
+.hero h1 em{font-style:italic;font-weight:500;color:var(--copper-bright);}
+.hero-body{font-size:18px;line-height:1.65;color:var(--muted-on-dark);max-width:480px;margin:28px 0 40px;}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap;}
+.btn-fill{background:var(--copper);color:var(--charcoal-deep);padding:16px 32px;border-radius:3px;font-weight:700;font-size:14px;text-decoration:none;letter-spacing:.02em;transition:background .25s, transform .25s;}
+.btn-fill:hover{background:var(--copper-bright);transform:translateY(-1px);}
+.btn-line{border:1px solid var(--line-dark);color:var(--cream-text);padding:16px 32px;border-radius:3px;font-weight:500;font-size:14px;text-decoration:none;transition:border-color .25s;}
+.btn-line:hover{border-color:var(--copper);}
+.hero-stats{display:flex;gap:40px;margin-top:56px;padding-top:32px;border-top:1px solid var(--line-dark);}
+.stat-num{font-family:'Fraunces',serif;font-size:32px;font-weight:600;color:var(--cream-text);line-height:1;}
+.stat-label{font-size:11px;color:var(--muted-on-dark);letter-spacing:.08em;text-transform:uppercase;margin-top:6px;}
+
+.diagram-wrap{position:relative;aspect-ratio:1/1;}
+.diagram-wrap svg{width:100%;height:100%;overflow:visible;}
+.diag-line{stroke:var(--line-dark);stroke-width:1;fill:none;}
+.diag-line.active{stroke:var(--copper);opacity:.5;}
+.diag-node{cursor:pointer;transition:transform .3s;}
+.diag-node:hover{transform:scale(1.08);}
+.diag-node circle.bg{fill:var(--charcoal-deep);stroke:var(--line-dark);stroke-width:1.5;transition:stroke .3s,fill .3s;}
+.diag-node:hover circle.bg{stroke:var(--copper);fill:rgba(196,98,45,.12);}
+.diag-node .icon{stroke:var(--muted-on-dark);stroke-width:1.6;fill:none;transition:stroke .3s;}
+.diag-node:hover .icon{stroke:var(--copper-bright);}
+.diag-node text{fill:var(--muted-on-dark);font-family:'Manrope',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.02em;transition:fill .3s;}
+.diag-node:hover text{fill:var(--cream-text);}
+.diag-center circle{fill:var(--copper);}
+.diag-center text{fill:var(--charcoal-deep);font-family:'Fraunces',serif;font-weight:600;font-size:13px;}
+
+section{padding:120px 56px;}
+.section-inner{max-width:1200px;margin:0 auto;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+.eyebrow .rule{width:32px;height:1px;background:var(--copper);}
+.eyebrow span{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-bright);}
+.section-title{font-size:clamp(36px,4.2vw,58px);font-weight:600;color:var(--cream-text);line-height:1.05;letter-spacing:-.01em;}
+.section-body{font-size:16px;color:var(--muted-on-dark);line-height:1.7;max-width:560px;}
+
+#skills{background:var(--paper);color:var(--ink);}
+#skills .eyebrow span{color:var(--copper);}
+#skills .section-title{color:var(--ink);}
+#skills .section-body{color:var(--ink-soft);}
+.skills-list{margin-top:64px;border-top:1px solid rgba(42,38,32,.15);}
+.skill-row{display:grid;grid-template-columns:60px 1fr auto 40px;align-items:center;gap:28px;padding:32px 0;border-bottom:1px solid rgba(42,38,32,.15);cursor:pointer;transition:background .3s;}
+.skill-row:hover{background:rgba(196,98,45,.05);}
+.skill-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--copper);}
+.skill-row-main{display:flex;align-items:center;gap:22px;}
+.skill-icon{width:44px;height:44px;flex-shrink:0;border-radius:50%;background:var(--charcoal);display:flex;align-items:center;justify-content:center;}
+.skill-icon svg{width:22px;height:22px;stroke:var(--paper);stroke-width:1.6;fill:none;}
+.skill-row h3{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--ink);}
+.skill-row p{font-size:14px;color:var(--ink-soft);margin-top:4px;max-width:420px;}
+.skill-tag{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);white-space:nowrap;}
+.skill-arrow{width:32px;height:32px;border-radius:50%;border:1px solid rgba(42,38,32,.25);display:flex;align-items:center;justify-content:center;transition:all .3s;}
+.skill-arrow svg{width:14px;height:14px;stroke:var(--ink);stroke-width:2;transition:transform .3s;}
+.skill-row:hover .skill-arrow{background:var(--copper);border-color:var(--copper);}
+.skill-row:hover .skill-arrow svg{stroke:var(--paper);transform:translateX(2px);}
+
+#pricing{background:var(--charcoal-deep);}
+.pricing-head{margin-bottom:64px;}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line-dark);border:1px solid var(--line-dark);}
+.price-col{background:var(--charcoal-deep);padding:48px 36px;position:relative;}
+.price-col.mid{background:var(--charcoal);}
+.price-tag{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--copper-bright);margin-bottom:16px;}
+.price-num{font-family:'Fraunces',serif;font-size:56px;font-weight:600;color:var(--cream-text);line-height:1;}
+.price-num sup{font-family:'Manrope',sans-serif;font-size:16px;font-weight:500;color:var(--muted-on-dark);vertical-align:top;margin-top:10px;display:inline-block;}
+.price-period{font-size:12px;color:var(--muted-on-dark);margin:8px 0 28px;}
+.price-desc{font-size:13.5px;color:var(--muted-on-dark);line-height:1.6;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--line-dark);}
+.price-feats{list-style:none;margin-bottom:32px;}
+.price-feats li{font-size:13px;color:var(--cream-text);padding:8px 0;display:flex;gap:10px;}
+.price-feats li::before{content:'—';color:var(--copper);flex-shrink:0;}
+.price-feats li.off{color:var(--muted-on-dark);}
+.price-feats li.off::before{color:var(--line-dark);}
+.price-btn{display:block;text-align:center;padding:15px;border-radius:3px;font-weight:700;font-size:13px;letter-spacing:.03em;text-decoration:none;transition:all .25s;cursor:pointer;border:1px solid var(--copper);color:var(--copper-bright);background:transparent;width:100%;font-family:'Manrope',sans-serif;}
+.price-btn.fill{background:var(--copper);color:var(--charcoal-deep);}
+.price-btn:hover{background:var(--copper);color:var(--charcoal-deep);}
+
+#contact{background:var(--paper);color:var(--ink);}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;}
+#contact .section-title{color:var(--ink);}
+.c-row{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid rgba(42,38,32,.15);}
+.c-row svg{width:20px;height:20px;stroke:var(--copper);stroke-width:1.6;flex-shrink:0;margin-top:2px;}
+.c-label{font-size:11px;color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;}
+.c-val{font-size:15px;color:var(--ink);}
+.form-box{background:var(--charcoal);border-radius:4px;padding:44px;}
+.form-title{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--cream-text);margin-bottom:28px;}
+.fg{margin-bottom:18px;}
+.fg label{display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--copper-bright);margin-bottom:8px;}
+.fg input,.fg select{width:100%;background:rgba(237,232,223,.05);border:1px solid var(--line-dark);border-radius:3px;padding:13px 16px;color:var(--cream-text);font-size:14px;font-family:'Manrope',sans-serif;outline:none;transition:border-color .25s;}
+.fg input:focus,.fg select:focus{border-color:var(--copper);}
+.fg select option{background:var(--charcoal-deep);}
+.submit-btn{width:100%;background:var(--copper);border:none;padding:16px;border-radius:3px;font-weight:700;font-size:13px;letter-spacing:.03em;color:var(--charcoal-deep);cursor:pointer;transition:background .25s;font-family:'Manrope',sans-serif;}
+.submit-btn:hover{background:var(--copper-bright);}
+.success-msg{display:none;text-align:center;padding:16px;background:rgba(196,98,45,.1);border:1px solid var(--copper);border-radius:3px;color:var(--copper-bright);font-weight:600;margin-top:14px;font-size:13px;}
+
+footer{background:var(--charcoal-deep);border-top:1px solid var(--line-dark);padding:36px 56px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;}
+.footer-brand{font-size:12.5px;color:var(--muted-on-dark);}
+.footer-brand strong{color:var(--cream-text);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{color:var(--muted-on-dark);text-decoration:none;font-size:12px;transition:color .25s;}
+.footer-links a:hover{color:var(--copper-bright);}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.vis{opacity:1;transform:none;}
+
+@media(max-width:900px){
+  nav{padding:16px 20px;}nav ul{display:none;}
+  section{padding:80px 20px;}
+  .hero{padding:130px 20px 60px;}
+  .hero-grid{grid-template-columns:1fr;gap:48px;}
+  .diagram-wrap{max-width:380px;margin:0 auto;}
+  .hero-stats{flex-wrap:wrap;gap:28px;}
+  .pricing-grid{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr;gap:48px;}
+  .skill-row{grid-template-columns:36px 1fr auto;gap:16px;}
+  .skill-tag{display:none;}
+  .skill-row-main{gap:14px;}
+  .skill-row h3{font-size:19px;}
+  footer{flex-direction:column;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-mark" href="#home">
+    <svg viewBox="0 0 34 34" fill="none">
+      <circle cx="17" cy="17" r="15" stroke="#C4622D" stroke-width="1.5"/>
+      <circle cx="17" cy="8" r="2.2" fill="#C4622D"/>
+      <circle cx="25" cy="21" r="2.2" fill="#EDE8DF"/>
+      <circle cx="9" cy="21" r="2.2" fill="#EDE8DF"/>
+      <path d="M17 8L25 21M17 8L9 21M9 21L25 21" stroke="#C4622D" stroke-width="1" opacity="0.6"/>
+    </svg>
+    <div>
+      <div class="nav-name">WSM Academy</div>
+      <span class="nav-sub">WSM Investments Holdings</span>
+    </div>
+  </a>
+  <ul>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Enroll</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get Started</a>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-eyebrow"><div class="rule"></div><span>South Africa's Skills Platform</span></div>
+      <h1>Eight skills.<br>One <em>connected</em><br>system.</h1>
+      <p class="hero-body">Modern careers aren't built on a single skill in isolation — they're built on how skills connect. WSM Academy teaches all eight, and how they work together, with a personal AI tutor guiding every step.</p>
+      <div class="hero-actions">
+        <a href="#skills" class="btn-fill">See the Skills</a>
+        <a href="#pricing" class="btn-line">View Pricing</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-num">08</div><div class="stat-label">Skill Tracks</div></div>
+        <div><div class="stat-num">03</div><div class="stat-label">Tier Plans</div></div>
+        <div><div class="stat-num">1:1</div><div class="stat-label">AI Tutoring</div></div>
+      </div>
+    </div>
+
+    <div class="diagram-wrap reveal" id="diagram-container"></div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="section-inner">
+    <div class="eyebrow reveal"><div class="rule"></div><span>The Eight Tracks</span></div>
+    <div class="section-title reveal">Each skill, on<br>its own — and how<br>it fits the whole.</div>
+    <p class="section-body reveal" style="margin-top:20px;">Select any track below for its full roadmap, tools, career outcomes, and AI tutor.</p>
+
+    <div class="skills-list" id="skills-list"></div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="section-inner">
+    <div class="pricing-head">
+      <div class="eyebrow reveal"><div class="rule"></div><span>Investment</span></div>
+      <div class="section-title reveal">Three ways in.</div>
+    </div>
+    <div class="pricing-grid reveal">
+      <div class="price-col">
+        <div class="price-tag">Basic</div>
+        <div class="price-num"><sup>R</sup>550</div>
+        <div class="price-period">per month, per track</div>
+        <p class="price-desc">Foundation-level access to get moving fast.</p>
+        <ul class="price-feats">
+          <li>Core modules</li>
+          <li>Basic AI tutor</li>
+          <li>Community access</li>
+          <li>Completion certificate</li>
+          <li class="off">Portfolio projects</li>
+          <li class="off">Mentor sessions</li>
+        </ul>
+        <button class="price-btn" onclick="openEnroll('Basic — R550/month')">Enroll Basic</button>
+      </div>
+      <div class="price-col mid">
+        <div class="price-tag">Pro</div>
+        <div class="price-num"><sup>R</sup>1,500</div>
+        <div class="price-period">per month, per track</div>
+        <p class="price-desc">Advanced curriculum with real project work.</p>
+        <ul class="price-feats">
+          <li>Everything in Basic</li>
+          <li>Pro AI tutor</li>
+          <li>Portfolio projects</li>
+          <li>Weekly workshops</li>
+          <li>2 mentor sessions/mo</li>
+          <li class="off">Job placement</li>
+        </ul>
+        <button class="price-btn fill" onclick="openEnroll('Pro — R1500/month')">Enroll Pro</button>
+      </div>
+      <div class="price-col">
+        <div class="price-tag">Pro Max</div>
+        <div class="price-num"><sup>R</sup>2,500</div>
+        <div class="price-period">per month, per track</div>
+        <p class="price-desc">Full access, full support, full pathway.</p>
+        <ul class="price-feats">
+          <li>Everything in Pro</li>
+          <li>Unrestricted AI tutor</li>
+          <li>Unlimited mentoring</li>
+          <li>Job placement support</li>
+          <li>WSM internship pathway</li>
+          <li>Alumni network</li>
+        </ul>
+        <button class="price-btn" onclick="openEnroll('Pro Max — R2500/month')">Enroll Pro Max</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-inner">
+    <div class="contact-grid">
+      <div class="reveal">
+        <div class="eyebrow"><div class="rule"></div><span>Get in Touch</span></div>
+        <div class="section-title">Start today.</div>
+        <div style="margin-top:40px;">
+          <div class="c-row">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <div><div class="c-label">Director</div><div class="c-val">Wakhile Madonsela</div></div>
+          </div>
+          <div class="c-row">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/></svg>
+            <div><div class="c-label">Company</div><div class="c-val">WSM Investments Holdings (Pty) Ltd</div></div>
+          </div>
+          <div class="c-row">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <div><div class="c-label">Phone / WhatsApp</div><div class="c-val">072 335 5470</div></div>
+          </div>
+          <div class="c-row">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4V4z"/><path d="M22 6l-10 7L2 6"/></svg>
+            <div><div class="c-label">Email</div><div class="c-val">wsminvestmentsholdings@gmail.com</div></div>
+          </div>
+          <div class="c-row">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div><div class="c-label">Location</div><div class="c-val">Northwold, Randburg, Gauteng</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-box reveal">
+        <div class="form-title">Enrollment Form</div>
+        <div class="fg"><label>Full Name</label><input id="f-name" type="text" placeholder="Your full name"></div>
+        <div class="fg"><label>Email Address</label><input id="f-email" type="email" placeholder="you@email.com"></div>
+        <div class="fg"><label>Phone Number</label><input id="f-phone" type="tel" placeholder="07X XXX XXXX"></div>
+        <div class="fg"><label>Skill Track</label>
+          <select id="f-skill">
+            <option value="">Select a skill track</option>
+            <option>Software Development</option>
+            <option>Data Analysis</option>
+            <option>Cybersecurity</option>
+            <option>Cloud Computing</option>
+            <option>Digital Marketing</option>
+            <option>E-commerce & Shopify</option>
+            <option>UI/UX Design</option>
+            <option>AI Tools & Automation</option>
+          </select>
+        </div>
+        <div class="fg"><label>Plan</label>
+          <select id="f-plan">
+            <option value="">Select your plan</option>
+            <option>Basic — R550/month</option>
+            <option>Pro — R1500/month</option>
+            <option>Pro Max — R2500/month</option>
+          </select>
+        </div>
+        <button class="submit-btn" onclick="submitEnroll()">Enroll Now</button>
+        <div class="success-msg" id="success-msg">Application received — we'll be in touch within 24 hours.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">© 2026 <strong>WSM Investments Holdings (Pty) Ltd</strong> — B-BBEE Level 1 — Northwold, Randburg, Gauteng</div>
+  <div class="footer-links">
+    <a href="#home">Home</a><a href="#skills">Skills</a><a href="#pricing">Pricing</a><a href="terms-of-service.html">Terms</a><a href="refund-policy.html">Refunds</a><a href="privacy-policy.html">Privacy</a>
+  </div>
+</footer>
+
+<script>
+// ─── ICON PATHS (clean monochrome outline icons, hand-picked per skill) ──────
+const ICONS = {
+  code: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
+  chart: '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  cloud: '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>',
+  megaphone: '<path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+  cart: '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>',
+  pen: '<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/>',
+  brain: '<path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2z"/>'
+};
+
+const SKILLS = [
+  { icon:'code', title:'Software Development', tag:'Build', desc:'HTML, CSS & JavaScript through to React and Node.js.' },
+  { icon:'chart', title:'Data Analysis', tag:'Interpret', desc:'Excel, SQL and Python — turning raw numbers into decisions.' },
+  { icon:'shield', title:'Cybersecurity', tag:'Protect', desc:'Networking fundamentals through to ethical hacking and Security+.' },
+  { icon:'cloud', title:'Cloud Computing', tag:'Deploy', desc:'AWS and Azure fundamentals, then real DevOps practice.' },
+  { icon:'megaphone', title:'Digital Marketing', tag:'Grow', desc:'Paid ads, organic strategy and analytics that prove ROI.' },
+  { icon:'cart', title:'E-commerce & Shopify', tag:'Sell', desc:'From store setup to branding to scaling a real online business.' },
+  { icon:'pen', title:'UI/UX Design', tag:'Design', desc:'Figma, design systems, and a portfolio worth showing.' },
+  { icon:'brain', title:'AI Tools & Automation', tag:'Automate', desc:'Prompt engineering, no-code automation, and Python scripting.' },
+];
+
+// ─── RENDER SKILLS LIST ────────────────────────────────────────────────────
+const list = document.getElementById('skills-list');
+SKILLS.forEach((s,i) => {
+  const row = document.createElement('div');
+  row.className = 'skill-row reveal';
+  row.innerHTML = `
+    <div class="skill-num">0${i+1}</div>
+    <div class="skill-row-main">
+      <div class="skill-icon"><svg viewBox="0 0 24 24">${ICONS[s.icon]}</svg></div>
+      <div><h3>${s.title}</h3><p>${s.desc}</p></div>
+    </div>
+    <div class="skill-tag">${s.tag}</div>
+    <div class="skill-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+  `;
+  list.appendChild(row);
+});
+
+// ─── SIGNATURE DIAGRAM (replaces the old canvas "video") ──────────────────
+// A constellation of the 8 skills connected around a central "WSM" node —
+// structurally meaningful (skills genuinely relate), not decorative.
+function buildDiagram() {
+  const container = document.getElementById('diagram-container');
+  const size = 440, cx = size/2, cy = size/2, r = 165;
+  const nodeR = 40;
+
+  let svg = `<svg viewBox="0 0 ${size} ${size}">`;
+
+  // Connection lines: each skill connects to center, plus a few cross-links
+  // showing real relationships (e.g. Cybersecurity <-> Cloud, AI <-> all).
+  const positions = SKILLS.map((s,i) => {
+    const angle = (i / SKILLS.length) * Math.PI * 2 - Math.PI/2;
+    return { x: cx + r*Math.cos(angle), y: cy + r*Math.sin(angle), ...s };
+  });
+
+  positions.forEach(p => {
+    svg += `<line class="diag-line" x1="${cx}" y1="${cy}" x2="${p.x}" y2="${p.y}"/>`;
+  });
+  // A few meaningful cross-connections
+  const crossLinks = [[2,3],[7,0],[7,1],[7,4],[4,5]]; // Cyber-Cloud, AI-Code, AI-Data, AI-Marketing, Marketing-Ecom
+  crossLinks.forEach(([a,b]) => {
+    svg += `<line class="diag-line" x1="${positions[a].x}" y1="${positions[a].y}" x2="${positions[b].x}" y2="${positions[b].y}"/>`;
+  });
+
+  // Center node
+  svg += `<g class="diag-center"><circle cx="${cx}" cy="${cy}" r="34"/><text x="${cx}" y="${cy+5}" text-anchor="middle">WSM</text></g>`;
+
+  // Skill nodes
+  positions.forEach((p,i) => {
+    svg += `<g class="diag-node" onclick="scrollToSkill(${i})">
+      <circle class="bg" cx="${p.x}" cy="${p.y}" r="${nodeR}"/>
+      <g transform="translate(${p.x-11}, ${p.y-19})"><svg width="22" height="22" viewBox="0 0 24 24" class="icon">${ICONS[p.icon]}</svg></g>
+      <text x="${p.x}" y="${p.y+32}" text-anchor="middle">${p.tag}</text>
+    </g>`;
+  });
+
+  svg += `</svg>`;
+  container.innerHTML = svg;
+}
+buildDiagram();
+
+function scrollToSkill(i) {
+  document.getElementById('skills').scrollIntoView({behavior:'smooth'});
+}
+
+// ─── ENROLLMENT ─────────────────────────────────────────────────────────
+function openEnroll(plan) {
+  document.getElementById('f-plan').value = plan;
+  document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+}
+function submitEnroll() {
+  const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  if(!name || !email) { alert('Please enter your name and email.'); return; }
+  document.getElementById('success-msg').style.display = 'block';
+  ['f-name','f-email','f-phone'].forEach(id=>document.getElementById(id).value='');
+  ['f-skill','f-plan'].forEach(id=>document.getElementById(id).value='');
+}
+
+// ─── SCROLL REVEAL ──────────────────────────────────────────────────────
+const ro = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); });
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+</script>
+</body>
+</html>
