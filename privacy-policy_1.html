@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — WSM Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#05070D; --deep:#0B0F1A; --panel:rgba(20,26,45,0.55); --panel-solid:#141A2D;
+  --cyan:#00D9FF; --cyan-bright:#5CEBFF; --violet:#8B5CF6; --violet-light:#A78BFA;
+  --text:#F4F6FB; --dim:#8891A8; --faint:#4A5268; --line:rgba(0,217,255,0.16); --glass-border:rgba(255,255,255,0.08);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--void);color:var(--text);font-family:'Inter',sans-serif;line-height:1.7;position:relative;overflow-x:hidden;}
+::selection{background:var(--cyan);color:var(--void);}
+
+.mesh-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.mesh-blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.28;}
+.mesh-blob.b1{width:500px;height:500px;background:var(--cyan);top:-150px;left:-100px;}
+.mesh-blob.b2{width:450px;height:450px;background:var(--violet);top:50%;right:-150px;}
+.grid-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(0,217,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,217,255,0.03) 1px,transparent 1px);background-size:48px 48px;}
+
+.glass{background:var(--panel);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:20px;}
+
+nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;justify-content:space-between;gap:40px;padding:14px 28px;background:rgba(11,15,26,.7);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:100px;width:calc(100% - 48px);max-width:700px;}
+.nav-mark{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-mark svg{width:26px;height:26px;flex-shrink:0;}
+.nav-name{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text);}
+.back-link{color:var(--cyan-bright);text-decoration:none;font-size:13px;font-weight:600;}
+
+.wrap{position:relative;z-index:10;max-width:760px;margin:0 auto;padding:150px 24px 100px;}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(40px,6vw,60px);color:var(--text);line-height:1.05;margin-bottom:8px;background:linear-gradient(135deg,var(--text),var(--cyan-bright));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.updated{display:inline-flex;align-items:center;gap:8px;background:rgba(0,217,255,.08);border:1px solid var(--line);border-radius:100px;padding:7px 16px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan-bright);margin-bottom:48px;}
+h2{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--text);margin:40px 0 14px;padding-top:32px;border-top:1px solid var(--glass-border);}
+h2:first-of-type{border-top:none;padding-top:0;}
+p{color:var(--dim);font-size:15px;margin-bottom:14px;}
+ul{color:var(--dim);font-size:15px;margin:14px 0 14px 20px;}
+li{margin-bottom:8px;}
+strong{color:var(--text);}
+a.inline{color:var(--cyan-bright);}
+table{width:100%;border-collapse:collapse;margin:16px 0;}
+th,td{text-align:left;padding:12px;border-bottom:1px solid var(--glass-border);font-size:14px;color:var(--dim);}
+th{color:var(--cyan-bright);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;}
+td strong{color:var(--text);}
+.contact-box{padding:28px;margin-top:48px;}
+.contact-box p{margin-bottom:6px;}
+footer{position:relative;z-index:10;border-top:1px solid var(--glass-border);padding:32px 40px;text-align:center;color:var(--dim);font-size:12px;}
+@media(max-width:700px){
+  nav{padding:12px 18px;}.wrap{padding:130px 20px 80px;}
+  table,tbody,tr{display:block;}th{display:none;}td{padding:6px 0;border:none;}
+  tr{padding-bottom:16px;border-bottom:1px solid var(--glass-border);margin-bottom:16px;display:block;}
+}
+</style>
+</head>
+<body>
+<div class="mesh-bg"><div class="mesh-blob b1"></div><div class="mesh-blob b2"></div></div>
+<div class="grid-overlay"></div>
+
+<nav>
+  <a class="nav-mark" href="index.html">
+    <svg viewBox="0 0 34 34" fill="none">
+      <defs><linearGradient id="navGrad" x1="0" y1="0" x2="34" y2="34"><stop offset="0%" stop-color="#00D9FF"/><stop offset="100%" stop-color="#8B5CF6"/></linearGradient></defs>
+      <circle cx="17" cy="17" r="15" stroke="url(#navGrad)" stroke-width="1.5"/>
+      <circle cx="17" cy="8" r="2.2" fill="#00D9FF"/>
+      <circle cx="25" cy="21" r="2.2" fill="#F4F6FB"/>
+      <circle cx="9" cy="21" r="2.2" fill="#F4F6FB"/>
+      <path d="M17 8L25 21M17 8L9 21M9 21L25 21" stroke="url(#navGrad)" stroke-width="1" opacity="0.6"/>
+    </svg>
+    <div class="nav-name">WSM Academy</div>
+  </a>
+  <a class="back-link" href="index.html">&larr; Back to Academy</a>
+</nav>
+
+<div class="wrap">
+  <h1>Privacy Policy</h1>
+  <div class="updated">Last Updated &middot; August 2026</div>
+
+  <p>WSM Academy, operated by WSM Investments Holdings (Pty) Ltd, respects your privacy. This policy explains what personal information we collect, why we collect it, and how it's protected when you use our platform.</p>
+
+  <h2>1. Information We Collect</h2>
+  <table>
+    <tr><th>What</th><th>Why</th></tr>
+    <tr><td><strong>Name, email, phone number</strong></td><td>To process your enrollment application and contact you about it</td></tr>
+    <tr><td><strong>Skill track & plan selection</strong></td><td>To determine which AI tutor and content tier to unlock for you</td></tr>
+    <tr><td><strong>Payment information</strong></td><td>Processed directly by Paystack — WSM Academy never sees or stores your card details</td></tr>
+    <tr><td><strong>AI tutor conversation content</strong></td><td>To provide tutoring responses via Google Gemini during your session, and to build your tutor history in your dashboard</td></tr>
+    <tr><td><strong>Subscription status</strong></td><td>To determine which tier of content and AI tutor access you're entitled to</td></tr>
+    <tr><td><strong>Login sessions</strong></td><td>To verify your identity via a one-time code and keep your dashboard secure</td></tr>
+  </table>
+
+  <h2>2. How We Use Your Information</h2>
+  <ul>
+    <li>To create and manage your subscription and unlock the correct AI tutor tier</li>
+    <li>To send enrollment confirmation, login codes, and instructional emails</li>
+    <li>To respond to support requests, refund requests, or general enquiries</li>
+    <li>To improve our course content and platform based on usage patterns</li>
+  </ul>
+  <p>We do not sell, rent, or trade your personal information to third parties for marketing purposes.</p>
+
+  <h2>3. Third-Party Services We Use</h2>
+  <p>To operate WSM Academy, we rely on the following trusted third-party services, each of which processes a limited part of your data on our behalf:</p>
+  <ul>
+    <li><strong>Paystack</strong> — processes your subscription payments securely. We never see or store your card details.</li>
+    <li><strong>Supabase</strong> — securely stores your subscription status, login sessions, and tutor conversation history.</li>
+    <li><strong>Resend</strong> — sends enrollment, login, and instructional emails on our behalf.</li>
+    <li><strong>Google Gemini</strong> — powers the AI tutor conversations. Your messages to the tutor are sent to Google's API to generate responses.</li>
+    <li><strong>Vercel</strong> — hosts our website.</li>
+  </ul>
+  <p>Each of these providers has its own privacy and security practices governing how they handle data passed to them.</p>
+
+  <h2>4. Data Security</h2>
+  <p>Your subscription and account data is protected using database-level access rules that prevent anyone — including our own website's public code — from reading or editing another student's records directly. Login sessions use a one-time code sent to your email rather than a stored password.</p>
+
+  <h2>5. Data Retention</h2>
+  <p>We retain your account, subscription, and tutor conversation history for as long as your account remains active, and for a reasonable period afterward for record-keeping, tax, and legal compliance purposes. You may request deletion of your personal data at any time, subject to legal retention requirements (e.g., financial transaction records).</p>
+
+  <h2>6. Your Rights</h2>
+  <p>Under South Africa's Protection of Personal Information Act (POPIA), you have the right to:</p>
+  <ul>
+    <li>Request a copy of the personal information we hold about you</li>
+    <li>Request correction of inaccurate information</li>
+    <li>Request deletion of your personal information, subject to legal retention obligations</li>
+    <li>Withdraw consent to marketing communications at any time</li>
+  </ul>
+  <p>To exercise any of these rights, contact us using the details below.</p>
+
+  <h2>7. Cookies & Local Storage</h2>
+  <p>Our website uses your browser's local storage to remember your login session between visits, so you don't need to re-enter a code every time you return to your dashboard. This is stored on your device only, not shared with third parties.</p>
+
+  <h2>8. Children's Privacy</h2>
+  <p>WSM Academy is intended for users aged 18 and older, or minors with parental/guardian consent. We do not knowingly collect personal information from children without such consent.</p>
+
+  <h2>9. Changes to This Policy</h2>
+  <p>We may update this Privacy Policy periodically. Changes will be posted on this page with an updated "Last Updated" date.</p>
+
+  <div class="glass contact-box">
+    <p><strong>Privacy questions or data requests?</strong></p>
+    <p>WSM Investments Holdings (Pty) Ltd</p>
+    <p>Northwold, Randburg, Gauteng, South Africa</p>
+    <p>Email: wsminvestmentsholdings@gmail.com</p>
+    <p>Phone / WhatsApp: 072 335 5470</p>
+  </div>
+</div>
+
+<footer>&copy; 2026 WSM Investments Holdings (Pty) Ltd. All rights reserved.</footer>
+</body>
+</html>
