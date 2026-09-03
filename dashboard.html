@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard — WSM Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#05070D; --deep:#0B0F1A; --panel:rgba(20,26,45,0.55); --panel-solid:#141A2D;
+  --cyan:#00D9FF; --cyan-bright:#5CEBFF; --violet:#8B5CF6; --violet-light:#A78BFA;
+  --text:#F4F6FB; --dim:#8891A8; --faint:#4A5268; --line:rgba(0,217,255,0.16); --glass-border:rgba(255,255,255,0.08);
+  --charcoal:#0A0E14; --charcoal-deep:#050709; --cream-text:#F4F6FB; --muted-on-dark:#8891A8; --line-dark:rgba(255,255,255,0.08);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden;position:relative;}
+::selection{background:var(--cyan);color:var(--void);}
+h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
+
+.mesh-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.mesh-blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.28;}
+.mesh-blob.b1{width:500px;height:500px;background:var(--cyan);top:-150px;left:-100px;}
+.mesh-blob.b2{width:450px;height:450px;background:var(--violet);top:50%;right:-150px;}
+.grid-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(0,217,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,217,255,0.03) 1px,transparent 1px);background-size:48px 48px;}
+
+.glass{background:var(--panel);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:20px;}
+
+nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;justify-content:space-between;gap:40px;padding:14px 28px;background:rgba(11,15,26,.7);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:100px;width:calc(100% - 48px);max-width:700px;}
+.nav-mark{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-mark svg{width:26px;height:26px;flex-shrink:0;}
+.nav-name{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text);}
+.nav-cta{background:transparent;border:1px solid var(--glass-border);color:var(--text);padding:9px 20px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:border-color .25s;}
+.nav-cta:hover{border-color:var(--cyan);}
+
+.wrap{position:relative;z-index:10;max-width:1100px;margin:0 auto;padding:150px 24px 100px;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(0,217,255,.08);border:1px solid var(--line);border-radius:100px;padding:7px 16px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan-bright);margin-bottom:20px;}
+.dash-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;flex-wrap:wrap;gap:20px;}
+.dash-welcome{font-size:clamp(30px,4.5vw,48px);font-weight:700;color:var(--text);line-height:1.05;}
+.dash-loading{color:var(--dim);font-size:13px;}
+
+.dash-section{margin-bottom:56px;}
+.dash-section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.dash-section h3{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--text);}
+.dash-section-count{font-size:12px;color:var(--dim);}
+
+.empty-note{color:var(--dim);font-size:14px;padding:24px;}
+.empty-note a{color:var(--cyan-bright);}
+
+#dash-subs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;}
+.sub-card{padding:20px;}
+.sub-tag{font-size:11px;color:var(--cyan-bright);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
+.sub-date{font-size:13px;color:var(--dim);}
+
+#dash-progress,#dash-chats{display:flex;flex-direction:column;gap:12px;}
+.progress-card{padding:18px 20px;display:flex;justify-content:space-between;align-items:center;}
+.progress-skill{font-weight:700;color:var(--text);font-size:15px;}
+.progress-count{font-size:12px;color:var(--dim);margin-top:2px;}
+.chat-card{padding:14px 18px;}
+.chat-meta{font-size:11px;color:var(--cyan-bright);font-weight:700;margin-bottom:4px;}
+.chat-preview{font-size:13px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+.achievements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+.achievement-card{padding:22px 18px;text-align:center;transition:transform .25s,border-color .25s;}
+.achievement-card.earned{border-color:rgba(0,217,255,.35);background:linear-gradient(160deg,rgba(0,217,255,.08),rgba(139,92,246,.06));}
+.achievement-card.earned:hover{transform:translateY(-4px);}
+.achievement-card.locked{opacity:.45;}
+.achievement-icon{font-size:32px;margin-bottom:12px;}
+.achievement-card.locked .achievement-icon{filter:grayscale(1);}
+.achievement-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.achievement-desc{font-size:11.5px;color:var(--dim);line-height:1.5;margin-bottom:14px;min-height:32px;}
+.achievement-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 14px;border-radius:100px;background:linear-gradient(135deg,var(--cyan),var(--violet));color:var(--void);}
+.achievement-badge.locked{background:rgba(255,255,255,.06);color:var(--faint);}
+
+.not-logged-in{text-align:center;padding:80px 24px;}
+.not-logged-in h2{font-size:28px;color:var(--text);margin-bottom:12px;}
+.not-logged-in p{color:var(--dim);font-size:14px;margin-bottom:24px;}
+.not-logged-in a{display:inline-block;background:linear-gradient(135deg,var(--cyan),var(--violet));color:var(--void);padding:14px 32px;border-radius:100px;font-weight:700;font-size:13px;text-decoration:none;}
+
+@media(max-width:900px){
+  nav{padding:12px 18px;}
+  .wrap{padding:130px 20px 80px;}
+}
+</style>
+</head>
+<body>
+
+<div class="mesh-bg"><div class="mesh-blob b1"></div><div class="mesh-blob b2"></div></div>
+<div class="grid-overlay"></div>
+
+<nav>
+  <a class="nav-mark" href="index.html">
+    <svg viewBox="0 0 34 34" fill="none">
+      <defs><linearGradient id="navGrad" x1="0" y1="0" x2="34" y2="34"><stop offset="0%" stop-color="#00D9FF"/><stop offset="100%" stop-color="#8B5CF6"/></linearGradient></defs>
+      <circle cx="17" cy="17" r="15" stroke="url(#navGrad)" stroke-width="1.5"/>
+      <circle cx="17" cy="8" r="2.2" fill="#00D9FF"/>
+      <circle cx="25" cy="21" r="2.2" fill="#F4F6FB"/>
+      <circle cx="9" cy="21" r="2.2" fill="#F4F6FB"/>
+      <path d="M17 8L25 21M17 8L9 21M9 21L25 21" stroke="url(#navGrad)" stroke-width="1" opacity="0.6"/>
+    </svg>
+    <div class="nav-name">WSM Academy</div>
+  </a>
+  <button class="nav-cta" id="logout-btn" onclick="doLogOut()" style="display:none;">Log Out</button>
+</nav>
+
+<div class="wrap">
+  <div id="not-logged-in-view" style="display:none;">
+    <div class="not-logged-in glass">
+      <h2>You're not logged in</h2>
+      <p>Log in from the homepage to see your dashboard, tutor history, and progress.</p>
+      <a href="index.html?login=1">Go to Login</a>
+    </div>
+  </div>
+
+  <div id="dashboard-view" style="display:none;">
+    <div class="dash-head">
+      <div>
+        <div class="eyebrow">Your Account</div>
+        <div class="dash-welcome" id="dash-welcome">Welcome back.</div>
+      </div>
+    </div>
+
+    <div class="dash-loading" id="dash-loading">Loading your account...</div>
+
+    <div id="dash-content" style="display:none;">
+      <div class="dash-section">
+        <div class="dash-section-head"><h3>Course Progress</h3></div>
+        <div id="dash-subs"></div>
+      </div>
+      <div class="dash-section">
+        <div class="dash-section-head"><h3>Completed Lessons</h3></div>
+        <div id="dash-progress"></div>
+      </div>
+      <div class="dash-section">
+        <div class="dash-section-head">
+          <h3>Achievements</h3>
+          <span class="dash-section-count" id="dash-achievements-count"></span>
+        </div>
+        <div id="dash-achievements" class="achievements-grid"></div>
+      </div>
+      <div class="dash-section" style="margin-bottom:0;">
+        <div class="dash-section-head"><h3>Recent Tutor Conversations</h3></div>
+        <div id="dash-chats"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://hlkluiktqjonnhcdrgao.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhsa2x1aWt0cWpvbm5oY2RyZ2FvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxOTA4MzQsImV4cCI6MjA5ODc2NjgzNH0.k3RSu9TBhmY3mbzCwO3_J6FbN-SIXh6qupkEKDDnLhw';
+const authClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let currentAuthUser = null;
+
+async function doLogOut() {
+  await authClient.auth.signOut();
+  window.location.href = 'index.html';
+}
+
+async function loadMySubscriptions() {
+  const { data, error } = await authClient.rpc('get_my_subscriptions');
+  if (error) { console.error('Subscriptions load error:', error); return []; }
+  return data || [];
+}
+async function loadMyProgress() {
+  const { data, error } = await authClient
+    .from('skill_progress')
+    .select('skill_title, step_index, completed_at')
+    .order('completed_at', { ascending: false });
+  if (error) { console.error('Progress load error:', error); return []; }
+  return data || [];
+}
+async function loadMyRecentChats() {
+  const { data, error } = await authClient
+    .from('chat_messages')
+    .select('skill_title, tier, role, content, created_at')
+    .order('created_at', { ascending: false })
+    .limit(10);
+  if (error) { console.error('Chat history load error:', error); return []; }
+  return data || [];
+}
+
+function renderSubs(subs) {
+  const el = document.getElementById('dash-subs');
+  if (subs.length === 0) {
+    el.innerHTML = `<div class="glass empty-note">No active subscriptions yet. <a href="index.html#pricing">Browse plans →</a></div>`;
+    return;
+  }
+  const tierLabel = { basic: 'Basic', pro: 'Pro', promax: 'Pro Max' };
+  el.innerHTML = subs.map(s => `
+    <div class="glass sub-card">
+      <div class="sub-tag">${tierLabel[s.tier] || s.tier}</div>
+      <div class="sub-date">Active since ${new Date(s.updated_at).toLocaleDateString()}</div>
+    </div>`).join('');
+}
+
+function renderProgress(progress) {
+  const el = document.getElementById('dash-progress');
+  if (progress.length === 0) {
+    el.innerHTML = `<div class="glass empty-note">No steps marked complete yet. Open any skill's roadmap on the homepage and mark steps as you finish them.</div>`;
+    return;
+  }
+  const bySkill = {};
+  progress.forEach(p => {
+    if (!bySkill[p.skill_title]) bySkill[p.skill_title] = [];
+    bySkill[p.skill_title].push(p.step_index);
+  });
+  el.innerHTML = Object.entries(bySkill).map(([skill, steps]) => `
+    <div class="glass progress-card">
+      <div>
+        <div class="progress-skill">${skill}</div>
+        <div class="progress-count">${steps.length} step${steps.length===1?'':'s'} completed</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderChats(chats) {
+  const el = document.getElementById('dash-chats');
+  if (chats.length === 0) {
+    el.innerHTML = `<div class="glass empty-note">No tutor conversations yet.</div>`;
+    return;
+  }
+  el.innerHTML = chats.map(c => `
+    <div class="glass chat-card">
+      <div class="chat-meta">${c.skill_title} · ${c.tier}</div>
+      <div class="chat-preview">${c.role === 'user' ? 'You: ' : 'Tutor: '}${c.content}</div>
+    </div>`).join('');
+}
+
+// Achievements are computed live from real data already loaded above —
+// no separate "achievements" table, so nothing can ever drift out of sync
+// with what actually happened.
+function renderAchievements(subs, progress, chats) {
+  const hasProOrAbove = subs.some(s => s.tier === 'pro' || s.tier === 'promax');
+  const hasProMax = subs.some(s => s.tier === 'promax');
+  const stepsCompleted = progress.length;
+  const hasSentMessage = chats.some(c => c.role === 'user');
+
+  const achievements = [
+    { icon: '🎯', title: 'First Steps', desc: 'Complete your first roadmap step', earned: stepsCompleted >= 1 },
+    { icon: '📌', title: 'Committed', desc: 'Subscribe to your first skill track', earned: subs.length >= 1 },
+    { icon: '🧭', title: 'Multi-Track', desc: 'Active on 2 or more skill tracks', earned: subs.length >= 2 },
+    { icon: '⭐', title: 'Pro Status', desc: 'Reach Pro or Pro Max on any track', earned: hasProOrAbove },
+    { icon: '💬', title: 'Conversationalist', desc: 'Send your first message to an AI tutor', earned: hasSentMessage },
+    { icon: '📚', title: 'Deep Diver', desc: 'Complete 5 or more roadmap steps', earned: stepsCompleted >= 5 },
+    { icon: '👑', title: 'All In', desc: 'Reach Pro Max on any track', earned: hasProMax },
+  ];
+
+  const earnedCount = achievements.filter(a => a.earned).length;
+  document.getElementById('dash-achievements-count').textContent = `${earnedCount} / ${achievements.length} earned`;
+  document.getElementById('dash-achievements').innerHTML = achievements.map(a => `
+    <div class="glass achievement-card ${a.earned ? 'earned' : 'locked'}">
+      <div class="achievement-icon">${a.icon}</div>
+      <div class="achievement-title">${a.title}</div>
+      <div class="achievement-desc">${a.desc}</div>
+      ${a.earned ? '<div class="achievement-badge">Earned</div>' : '<div class="achievement-badge locked">Locked</div>'}
+    </div>`).join('');
+}
+
+async function loadDashboard() {
+  document.getElementById('dash-welcome').textContent =
+    'Welcome back, ' + currentAuthUser.email.split('@')[0] + '.';
+  document.getElementById('dash-loading').style.display = 'block';
+  document.getElementById('dash-content').style.display = 'none';
+
+  const [subs, progress, chats] = await Promise.all([
+    loadMySubscriptions(),
+    loadMyProgress(),
+    loadMyRecentChats()
+  ]);
+
+  renderSubs(subs);
+  renderProgress(progress);
+  renderChats(chats);
+  renderAchievements(subs, progress, chats);
+
+  document.getElementById('dash-loading').style.display = 'none';
+  document.getElementById('dash-content').style.display = 'block';
+}
+
+// This is a protected page: check for a real session on load, and show
+// the "not logged in" view instead of the dashboard if there isn't one.
+authClient.auth.getSession().then(({ data: { session } }) => {
+  if (session) {
+    currentAuthUser = session.user;
+    document.getElementById('logout-btn').style.display = 'block';
+    document.getElementById('dashboard-view').style.display = 'block';
+    loadDashboard();
+  } else {
+    document.getElementById('not-logged-in-view').style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>
