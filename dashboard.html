@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard — WSM Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#05070D; --deep:#0B0F1A; --panel:rgba(20,26,45,0.55); --panel-solid:#141A2D;
+  --cyan:#00D9FF; --cyan-bright:#5CEBFF; --violet:#8B5CF6; --violet-light:#A78BFA;
+  --text:#F4F6FB; --dim:#8891A8; --faint:#4A5268; --line:rgba(0,217,255,0.16); --glass-border:rgba(255,255,255,0.08);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden;position:relative;}
+::selection{background:var(--cyan);color:var(--void);}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;}
+
+.mesh-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.mesh-blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.22;}
+.mesh-blob.b1{width:500px;height:500px;background:var(--cyan);top:-150px;left:-100px;}
+.mesh-blob.b2{width:450px;height:450px;background:var(--violet);top:50%;right:-150px;}
+.grid-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(0,217,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,217,255,0.025) 1px,transparent 1px);background-size:48px 48px;}
+
+.glass{background:var(--panel);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:20px;}
+
+/* ── APP SHELL ── */
+.app{position:relative;z-index:10;display:flex;min-height:100vh;}
+
+/* SIDEBAR (desktop) */
+.sidebar{width:240px;flex-shrink:0;background:rgba(11,15,26,.6);backdrop-filter:blur(20px);border-right:1px solid var(--glass-border);padding:24px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;}
+.side-logo{display:flex;align-items:center;gap:10px;padding:8px 8px 28px;text-decoration:none;}
+.side-logo svg{width:28px;height:28px;flex-shrink:0;}
+.side-logo-text{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--text);}
+.side-nav{list-style:none;display:flex;flex-direction:column;gap:2px;flex:1;}
+.side-nav a{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;color:var(--dim);text-decoration:none;font-size:13.5px;font-weight:500;transition:all .2s;}
+.side-nav a svg{width:18px;height:18px;stroke-width:1.7;flex-shrink:0;}
+.side-nav a:hover{background:rgba(255,255,255,.04);color:var(--text);}
+.side-nav a.active{background:linear-gradient(135deg,rgba(0,217,255,.14),rgba(139,92,246,.1));color:var(--cyan-bright);}
+.side-bottom{border-top:1px solid var(--glass-border);padding-top:14px;margin-top:14px;}
+.side-bottom button{width:100%;background:none;border:none;color:var(--dim);font-size:13px;padding:10px 12px;text-align:left;cursor:pointer;border-radius:12px;transition:all .2s;display:flex;align-items:center;gap:10px;}
+.side-bottom button:hover{background:rgba(255,255,255,.04);color:var(--text);}
+
+/* MAIN */
+.main{flex:1;min-width:0;}
+
+/* HEADER */
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(5,7,13,.75);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.mobile-logo{display:none;align-items:center;gap:8px;text-decoration:none;}
+.mobile-logo svg{width:24px;height:24px;}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.icon-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.04);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s;position:relative;}
+.icon-btn:hover{border-color:var(--cyan);}
+.icon-btn svg{width:17px;height:17px;stroke:var(--dim);stroke-width:1.7;}
+.user-chip{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid var(--glass-border);border-radius:100px;padding:6px 14px 6px 6px;cursor:pointer;}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--void);}
+.user-chip span{font-size:13px;font-weight:600;color:var(--text);}
+.hamburger{display:none;background:none;border:none;color:var(--text);cursor:pointer;padding:6px;}
+
+/* CONTENT */
+.content{padding:32px;max-width:1400px;}
+.page-view{display:none;}
+.page-view.active{display:block;}
+</style>
+</head>
+<body>
+
+<div class="mesh-bg"><div class="mesh-blob b1"></div><div class="mesh-blob b2"></div></div>
+<div class="grid-overlay"></div>
+
+<div id="not-logged-in-view" style="display:none;position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;">
+  <div class="glass" style="max-width:420px;text-align:center;padding:48px 32px;">
+    <h2 style="font-size:26px;margin-bottom:12px;">You're not logged in</h2>
+    <p style="color:var(--dim);font-size:14px;margin-bottom:24px;">Log in from the homepage to see your dashboard, tutor history, and progress.</p>
+    <a href="index.html?login=1" style="display:inline-block;background:linear-gradient(135deg,var(--cyan),var(--violet));color:var(--void);padding:14px 32px;border-radius:100px;font-weight:700;font-size:13px;text-decoration:none;">Go to Login</a>
+  </div>
+</div>
+
+<div class="app" id="app-shell" style="display:none;">
+  <aside class="sidebar" id="sidebar">
+    <a class="side-logo" href="index.html">
+      <svg viewBox="0 0 34 34" fill="none">
+        <defs><linearGradient id="navGrad" x1="0" y1="0" x2="34" y2="34"><stop offset="0%" stop-color="#00D9FF"/><stop offset="100%" stop-color="#8B5CF6"/></linearGradient></defs>
+        <circle cx="17" cy="17" r="15" stroke="url(#navGrad)" stroke-width="1.5"/>
+        <circle cx="17" cy="8" r="2.2" fill="#00D9FF"/><circle cx="25" cy="21" r="2.2" fill="#F4F6FB"/><circle cx="9" cy="21" r="2.2" fill="#F4F6FB"/>
+        <path d="M17 8L25 21M17 8L9 21M9 21L25 21" stroke="url(#navGrad)" stroke-width="1" opacity="0.6"/>
+      </svg>
+      <span class="side-logo-text">WSM Academy</span>
+    </a>
+    <ul class="side-nav">
+      <li><a href="#" class="active" data-page="overview" onclick="switchPage(event,'overview')"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a></li>
+      <li><a href="#" data-page="courses" onclick="switchPage(event,'courses')"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>My Courses</a></li>
+      <li><a href="#" data-page="roadmap" onclick="switchPage(event,'roadmap')"><svg viewBox="0 0 24 24" fill="none"><path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0 0 21 18.382V7.618a1 1 0 0 0-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>Skill Roadmap</a></li>
+      <li><a href="#" data-page="tutor" onclick="switchPage(event,'tutor')"><svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>AI Tutor</a></li>
+      <li><a href="#" data-page="achievements" onclick="switchPage(event,'achievements')"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="6"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>Achievements</a></li>
+      <li><a href="#" data-page="certificates" onclick="switchPage(event,'certificates')"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>Certificates</a></li>
+      <li><a href="#" data-page="billing" onclick="switchPage(event,'billing')"><svg viewBox="0 0 24 24" fill="none"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Billing</a></li>
+    </ul>
+    <div class="side-bottom">
+      <button onclick="doLogOut()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Log Out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger-btn" onclick="toggleSidebar()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <a class="mobile-logo" href="index.html">
+          <svg viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="15" stroke="#00D9FF" stroke-width="1.5"/><circle cx="17" cy="8" r="2.2" fill="#00D9FF"/></svg>
+        </a>
+      </div>
+      <div class="topbar-right">
+        <div class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+        <div class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <div class="user-chip"><div class="user-avatar" id="user-avatar-initial">?</div><span id="user-chip-name">...</span></div>
+      </div>
+    </div>
+    <div class="content" id="dash-loading-wrap">
+      <p style="color:var(--dim);font-size:13px;">Loading your account...</p>
+    </div>
+    <div class="content" id="dash-content" style="display:none;"></div>
+  </div>
+</div>
+
+<style>
+/* CONTENT PIECES */
+.page-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan-bright);margin-bottom:6px;}
+.page-title{font-size:clamp(24px,3vw,32px);font-weight:700;color:var(--text);margin-bottom:4px;}
+.page-sub{color:var(--dim);font-size:14px;margin-bottom:28px;}
+
+.stat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:32px;}
+.stat-chip{padding:18px 20px;}
+.stat-chip-val{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--text);line-height:1;}
+.stat-chip-label{font-size:11.5px;color:var(--dim);margin-top:6px;}
+
+.section-block{margin-bottom:36px;}
+.section-block-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.section-block-head h3{font-size:17px;font-weight:700;color:var(--text);}
+.section-link{font-size:12.5px;color:var(--cyan-bright);text-decoration:none;font-weight:600;}
+
+.cl-card{padding:26px;display:flex;flex-direction:column;gap:14px;}
+.cl-tag{font-size:11px;color:var(--violet-light);font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+.cl-title{font-size:19px;font-weight:700;color:var(--text);}
+.progress-bar-track{height:8px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--violet));border-radius:100px;transition:width 1s ease;}
+.cl-meta{font-size:13px;color:var(--dim);}
+.cl-btn{align-self:flex-start;background:linear-gradient(135deg,var(--cyan),var(--violet));color:var(--void);padding:11px 24px;border-radius:100px;font-weight:700;font-size:12.5px;text-decoration:none;border:none;cursor:pointer;margin-top:6px;}
+
+.course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;}
+.course-card{padding:20px;cursor:pointer;transition:transform .25s,border-color .25s;}
+.course-card:hover{transform:translateY(-4px);border-color:rgba(0,217,255,.35);}
+.course-icon{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,rgba(0,217,255,.15),rgba(139,92,246,.15));display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+.course-icon svg{width:18px;height:18px;stroke:var(--cyan-bright);stroke-width:1.6;fill:none;}
+.course-name{font-weight:700;font-size:14.5px;color:var(--text);margin-bottom:4px;}
+.course-tier{font-size:11px;color:var(--dim);margin-bottom:12px;}
+
+.roadmap-track{display:flex;flex-direction:column;gap:0;}
+.roadmap-node{display:flex;gap:16px;padding:16px 0;position:relative;}
+.roadmap-node::before{content:'';position:absolute;left:15px;top:44px;bottom:-4px;width:1px;background:var(--glass-border);}
+.roadmap-node:last-child::before{display:none;}
+.roadmap-dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;z-index:1;}
+.roadmap-dot.done{background:linear-gradient(135deg,var(--cyan),var(--violet));color:var(--void);}
+.roadmap-dot.locked{background:rgba(255,255,255,.05);border:1px solid var(--glass-border);color:var(--faint);}
+.roadmap-node-title{font-weight:700;font-size:14px;color:var(--text);}
+.roadmap-node-sub{font-size:12px;color:var(--dim);margin-top:2px;}
+
+.achievements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;}
+.achievement-card{padding:22px 18px;text-align:center;transition:transform .25s;}
+.achievement-card.earned{border-color:rgba(0,217,255,.35);background:linear-gradient(160deg,rgba(0,217,255,.08),rgba(139,92,246,.06));}
+.achievement-card.earned:hover{transform:translateY(-4px);}
+.achievement-card.locked{opacity:.4;}
+.achievement-icon{font-size:30px;margin-bottom:10px;}
+.achievement-card.locked .achievement-icon{filter:grayscale(1);}
+.achievement-title{font-weight:700;font-size:13.5px;color:var(--text);margin-bottom:5px;}
+.achievement-desc{font-size:11px;color:var(--dim);line-height:1.5;min-height:30px;margin-bottom:12px;}
+.achievement-badge{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;background:linear-gradient(135deg,var(--cyan),var(--violet));color:var(--void);}
+.achievement-badge.locked{background:rgba(255,255,255,.06);color:var(--faint);}
+
+.tutor-card{padding:32px;}
+.tutor-card h3{font-size:20px;margin-bottom:6px;}
+.tutor-card p{color:var(--dim);font-size:14px;margin-bottom:20px;}
+.tutor-prompts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.tutor-prompt-chip{background:rgba(0,217,255,.08);border:1px solid var(--line);border-radius:100px;padding:7px 14px;font-size:12px;color:var(--cyan-bright);}
+
+.empty-block{text-align:center;padding:48px 24px;}
+.empty-block-icon{font-size:36px;margin-bottom:12px;}
+.empty-block h4{font-size:16px;color:var(--text);margin-bottom:8px;}
+.empty-block p{color:var(--dim);font-size:13px;margin-bottom:20px;}
+.empty-block a{display:inline-block;background:linear-gradient(135deg,var(--cyan),var(--violet));color:var(--void);padding:11px 26px;border-radius:100px;font-weight:700;font-size:12.5px;text-decoration:none;}
+
+.activity-item{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--glass-border);}
+.activity-item:last-child{border-bottom:none;}
+.activity-icon{width:32px;height:32px;border-radius:50%;background:rgba(0,217,255,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;}
+.activity-text{font-size:13px;color:var(--text);}
+.activity-time{font-size:11px;color:var(--dim);margin-top:2px;}
+
+.billing-card{padding:26px;}
+.billing-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--glass-border);}
+.billing-row:last-of-type{border-bottom:none;}
+.billing-label{font-size:12px;color:var(--dim);}
+.billing-value{font-size:14px;color:var(--text);font-weight:600;}
+.status-pill{display:inline-block;background:rgba(0,217,255,.1);color:var(--cyan-bright);font-size:11px;font-weight:700;padding:4px 12px;border-radius:100px;}
+
+@media(max-width:900px){
+  .sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:200;transition:left .3s;box-shadow:0 0 60px rgba(0,0,0,.5);}
+  .sidebar.open{left:0;}
+  .hamburger{display:block;}
+  .mobile-logo{display:flex;}
+  .content{padding:20px;}
+  .user-chip span{display:none;}
+}
+</style>
+
+<div id="sidebar-overlay" onclick="toggleSidebar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:150;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://hlkluiktqjonnhcdrgao.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhsa2x1aWt0cWpvbm5oY2RyZ2FvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxOTA4MzQsImV4cCI6MjA5ODc2NjgzNH0.k3RSu9TBhmY3mbzCwO3_J6FbN-SIXh6qupkEKDDnLhw';
+const authClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let currentAuthUser = null;
+let LIVE = { subs: [], progress: [], chats: [] };
+
+async function doLogOut() {
+  await authClient.auth.signOut();
+  window.location.href = 'index.html';
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  const overlay = document.getElementById('sidebar-overlay');
+  overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+}
+
+function switchPage(e, page) {
+  if (e) e.preventDefault();
+  document.querySelectorAll('.side-nav a').forEach(a => a.classList.remove('active'));
+  document.querySelector(`.side-nav a[data-page="${page}"]`).classList.add('active');
+  renderPage(page);
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').style.display = 'none';
+  window.scrollTo(0,0);
+}
+
+// ── DATA LOADING (all real, same tables as before) ──────────────────────────
+async function loadMySubscriptions() {
+  const { data, error } = await authClient.rpc('get_my_subscriptions');
+  if (error) { console.error(error); return []; }
+  return data || [];
+}
+async function loadMyProgress() {
+  const { data, error } = await authClient.from('skill_progress')
+    .select('skill_title, step_index, completed_at').order('completed_at', { ascending: false });
+  if (error) { console.error(error); return []; }
+  return data || [];
+}
+async function loadMyChats() {
+  const { data, error } = await authClient.from('chat_messages')
+    .select('skill_title, tier, role, content, created_at').order('created_at', { ascending: false }).limit(20);
+  if (error) { console.error(error); return []; }
+  return data || [];
+}
+
+const TIER_LABEL = { basic: 'Basic', pro: 'Pro', promax: 'Pro Max' };
+
+function computeAchievements() {
+  const { subs, progress, chats } = LIVE;
+  const hasProOrAbove = subs.some(s => s.tier === 'pro' || s.tier === 'promax');
+  const hasProMax = subs.some(s => s.tier === 'promax');
+  const stepsCompleted = progress.length;
+  const hasSentMessage = chats.some(c => c.role === 'user');
+  return [
+    { icon: '🎯', title: 'First Steps', desc: 'Complete your first roadmap step', earned: stepsCompleted >= 1 },
+    { icon: '📌', title: 'Committed', desc: 'Subscribe to your first skill track', earned: subs.length >= 1 },
+    { icon: '🧭', title: 'Multi-Track', desc: 'Active on 2 or more skill tracks', earned: subs.length >= 2 },
+    { icon: '⭐', title: 'Pro Status', desc: 'Reach Pro or Pro Max on any track', earned: hasProOrAbove },
+    { icon: '💬', title: 'Conversationalist', desc: 'Send your first message to an AI tutor', earned: hasSentMessage },
+    { icon: '📚', title: 'Deep Diver', desc: 'Complete 5 or more roadmap steps', earned: stepsCompleted >= 5 },
+    { icon: '👑', title: 'All In', desc: 'Reach Pro Max on any track', earned: hasProMax },
+  ];
+}
+
+function timeAgo(dateStr) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff/60000), hrs = Math.floor(mins/60), days = Math.floor(hrs/24);
+  if (days >= 1) return days === 1 ? 'Yesterday' : `${days} days ago`;
+  if (hrs >= 1) return `${hrs}h ago`;
+  if (mins >= 1) return `${mins}m ago`;
+  return 'Just now';
+}
+
+// ── PAGE RENDERERS ───────────────────────────────────────────────────────────
+function renderPage(page) {
+  const el = document.getElementById('dash-content');
+  if (page === 'overview') el.innerHTML = renderOverview();
+  else if (page === 'courses') el.innerHTML = renderCourses();
+  else if (page === 'roadmap') el.innerHTML = renderRoadmap();
+  else if (page === 'tutor') el.innerHTML = renderTutorPage();
+  else if (page === 'achievements') el.innerHTML = renderAchievementsPage();
+  else if (page === 'certificates') el.innerHTML = renderCertificates();
+  else if (page === 'billing') el.innerHTML = renderBilling();
+}
+
+function renderOverview() {
+  const { subs, progress, chats } = LIVE;
+  const stepsCompleted = progress.length;
+  const earnedCount = computeAchievements().filter(a=>a.earned).length;
+
+  const activity = [
+    ...progress.slice(0,5).map(p => ({icon:'✓', text:`Marked "${p.skill_title}" step ${p.step_index+1} complete`, time: p.completed_at})),
+    ...chats.filter(c=>c.role==='user').slice(0,5).map(c => ({icon:'💬', text:`Asked the ${c.skill_title} tutor a question`, time: c.created_at}))
+  ].sort((a,b)=> new Date(b.time)-new Date(a.time)).slice(0,6);
+
+  return `
+    <div class="page-eyebrow">Dashboard</div>
+    <div class="page-title">Welcome back, ${currentAuthUser.email.split('@')[0]} 👋</div>
+    <div class="page-sub">Continue building your skills and stay on track with your learning goals.</div>
+
+    <div class="stat-strip">
+      <div class="glass stat-chip"><div class="stat-chip-val">${subs.length}</div><div class="stat-chip-label">Active Tracks</div></div>
+      <div class="glass stat-chip"><div class="stat-chip-val">${stepsCompleted}</div><div class="stat-chip-label">Steps Completed</div></div>
+      <div class="glass stat-chip"><div class="stat-chip-val">${earnedCount} / 7</div><div class="stat-chip-label">Achievements</div></div>
+      <div class="glass stat-chip"><div class="stat-chip-val">${chats.filter(c=>c.role==='user').length}</div><div class="stat-chip-label">Tutor Questions Asked</div></div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-block-head"><h3>Continue Learning</h3></div>
+      ${subs.length === 0 ? `
+        <div class="glass empty-block">
+          <div class="empty-block-icon">🚀</div>
+          <h4>You're ready to start your journey.</h4>
+          <p>Choose a skill and enroll to unlock your roadmap and AI tutor.</p>
+          <a href="index.html#skills">Browse Skills →</a>
+        </div>` : subs.map(s => {
+          return `
+        <div class="glass cl-card">
+          <div class="cl-tag">${TIER_LABEL[s.tier]||s.tier}</div>
+          <div class="cl-title">Active subscription</div>
+          <div class="cl-meta">Active since ${new Date(s.updated_at).toLocaleDateString()}</div>
+          <a href="index.html#skills" class="cl-btn">Continue Learning →</a>
+        </div>`;
+        }).join('')}
+    </div>
+
+    <div class="section-block">
+      <div class="section-block-head"><h3>Recent Activity</h3></div>
+      <div class="glass" style="padding:8px 24px;">
+        ${activity.length === 0 ? `<div class="empty-block"><div class="empty-block-icon">📋</div><h4>No activity yet</h4><p>Complete a roadmap step or ask your AI tutor a question to see it here.</p></div>` :
+          activity.map(a => `<div class="activity-item"><div class="activity-icon">${a.icon}</div><div><div class="activity-text">${a.text}</div><div class="activity-time">${timeAgo(a.time)}</div></div></div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderCourses() {
+  const { subs } = LIVE;
+  return `
+    <div class="page-eyebrow">Learning</div>
+    <div class="page-title">My Courses</div>
+    <div class="page-sub">Everything you're currently enrolled in.</div>
+    ${subs.length === 0 ? `
+      <div class="glass empty-block">
+        <div class="empty-block-icon">📚</div>
+        <h4>No courses yet</h4>
+        <p>Choose a skill and start your WSM Academy journey.</p>
+        <a href="index.html#skills">Explore Skills →</a>
+      </div>` : `<div class="course-grid">${subs.map(s => `
+      <div class="glass course-card" onclick="window.location.href='index.html#skills'">
+        <div class="course-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+        <div class="course-name">${TIER_LABEL[s.tier]||s.tier} Access</div>
+        <div class="course-tier">Active since ${new Date(s.updated_at).toLocaleDateString()}</div>
+      </div>`).join('')}</div>`}
+  `;
+}
+
+function renderRoadmap() {
+  const { progress } = LIVE;
+  const bySkill = {};
+  progress.forEach(p => { (bySkill[p.skill_title] ||= []).push(p.step_index); });
+  const skills = Object.keys(bySkill);
+
+  return `
+    <div class="page-eyebrow">Progress</div>
+    <div class="page-title">Your Roadmap</div>
+    <div class="page-sub">Steps you've marked complete, per skill.</div>
+    ${skills.length === 0 ? `
+      <div class="glass empty-block">
+        <div class="empty-block-icon">🧭</div>
+        <h4>No progress tracked yet</h4>
+        <p>Open any skill's roadmap and mark steps complete as you finish them.</p>
+        <a href="index.html#skills">Browse Skills →</a>
+      </div>` : skills.map(skill => `
+      <div class="glass" style="padding:24px;margin-bottom:16px;">
+        <div style="font-weight:700;font-size:15px;margin-bottom:14px;">${skill}</div>
+        <div class="roadmap-track">
+          ${bySkill[skill].sort((a,b)=>a-b).map(idx => `
+          <div class="roadmap-node">
+            <div class="roadmap-dot done">✓</div>
+            <div><div class="roadmap-node-title">Step ${idx+1} completed</div></div>
+          </div>`).join('')}
+        </div>
+      </div>`).join('')}
+  `;
+}
+
+function renderTutorPage() {
+  return `
+    <div class="page-eyebrow">AI Tutor</div>
+    <div class="page-title">Your AI Tutor</div>
+    <div class="page-sub">Get instant help, explanations, examples and guidance while you learn.</div>
+    <div class="glass tutor-card">
+      <h3>Meet your AI Tutor</h3>
+      <p>Every skill track has its own tutor, tuned to your access tier — with built-in starter questions to get you going.</p>
+      <a href="index.html#skills" class="cl-btn">Open a Skill's Tutor →</a>
+      <div class="tutor-prompts">
+        <span class="tutor-prompt-chip">Explain this concept</span>
+        <span class="tutor-prompt-chip">Give me a coding example</span>
+        <span class="tutor-prompt-chip">Help me debug</span>
+        <span class="tutor-prompt-chip">Quiz me</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderAchievementsPage() {
+  const achievements = computeAchievements();
+  const earnedCount = achievements.filter(a=>a.earned).length;
+  return `
+    <div class="page-eyebrow">Progress</div>
+    <div class="page-title">Achievements</div>
+    <div class="page-sub">${earnedCount} / ${achievements.length} Achievements Earned</div>
+    <div class="achievements-grid">
+      ${achievements.map(a => `
+      <div class="glass achievement-card ${a.earned?'earned':'locked'}">
+        <div class="achievement-icon">${a.icon}</div>
+        <div class="achievement-title">${a.title}</div>
+        <div class="achievement-desc">${a.desc}</div>
+        ${a.earned ? '<div class="achievement-badge">Earned</div>' : '<div class="achievement-badge locked">Locked</div>'}
+      </div>`).join('')}
+    </div>
+  `;
+}
+
+function renderCertificates() {
+  // Honest: no certificate-generation system exists yet anywhere in this
+  // build, so this is always the empty state for now — not faked.
+  return `
+    <div class="page-eyebrow">Credentials</div>
+    <div class="page-title">Certificates</div>
+    <div class="page-sub">Certificates you've earned by completing a skill track.</div>
+    <div class="glass empty-block">
+      <div class="empty-block-icon">🎓</div>
+      <h4>No certificates yet.</h4>
+      <p>Certificate generation is coming soon. Complete a skill roadmap to be first in line once it launches.</p>
+      <a href="index.html#skills">Explore Courses →</a>
+    </div>
+  `;
+}
+
+function renderBilling() {
+  const { subs } = LIVE;
+  return `
+    <div class="page-eyebrow">Account</div>
+    <div class="page-title">Membership & Billing</div>
+    <div class="page-sub">Your active subscriptions, from real payment records.</div>
+    ${subs.length === 0 ? `
+      <div class="glass empty-block">
+        <div class="empty-block-icon">💳</div>
+        <h4>No active subscription</h4>
+        <p>Browse plans to unlock a skill track and its AI tutor.</p>
+        <a href="index.html#pricing">Browse Plans →</a>
+      </div>` : subs.map(s => `
+      <div class="glass billing-card" style="margin-bottom:14px;">
+        <div class="billing-row"><span class="billing-label">Plan</span><span class="billing-value">${TIER_LABEL[s.tier]||s.tier}</span></div>
+        <div class="billing-row"><span class="billing-label">Status</span><span class="status-pill">${s.subscription_status === 'active' ? 'Active' : s.subscription_status}</span></div>
+        <div class="billing-row"><span class="billing-label">Active Since</span><span class="billing-value">${new Date(s.updated_at).toLocaleDateString()}</span></div>
+        <div class="billing-row"><span class="billing-label">Next Billing Date</span><span class="billing-value" style="color:var(--dim);">Not tracked yet</span></div>
+      </div>`).join('')}
+    <p style="font-size:12px;color:var(--faint);margin-top:8px;">Billing amount and renewal dates aren't tracked yet — this section will show them once that data is captured from Paystack.</p>
+  `;
+}
+
+// ── BOOT ─────────────────────────────────────────────────────────────────────
+authClient.auth.getSession().then(async ({ data: { session } }) => {
+  if (!session) {
+    document.getElementById('not-logged-in-view').style.display = 'flex';
+    return;
+  }
+  currentAuthUser = session.user;
+  document.getElementById('app-shell').style.display = 'flex';
+  document.getElementById('user-chip-name').textContent = currentAuthUser.email.split('@')[0];
+  document.getElementById('user-avatar-initial').textContent = currentAuthUser.email[0].toUpperCase();
+
+  const [subs, progress, chats] = await Promise.all([loadMySubscriptions(), loadMyProgress(), loadMyChats()]);
+  LIVE = { subs, progress, chats };
+
+  document.getElementById('dash-loading-wrap').style.display = 'none';
+  document.getElementById('dash-content').style.display = 'block';
+  renderPage('overview');
+});
+</script>
+</body>
+</html>
